@@ -60,7 +60,9 @@ vertexai.init(project=PROJECT_ID, location=LOCATION)
 
 @st.cache_resource
 def get_model():
+    #model = TextGenerationModel.from_pretrained("text-bison@001")
     generation_model = TextGenerationModel.from_pretrained("text-bison@001")
+    generation_model = model.get_tuned_model("projects/215149473000/locations/us-central1/models/9086379485103652864")
     return generation_model
 
 def get_text_generation(prompt="",  **parameters):
