@@ -188,7 +188,7 @@ with st.container():
                 if len(prompt) >= 25000:
                     st.markdown("<h6 style='text-align: center; color: red;'>Document exceeds input token limit. Try trimming the document.</h3>", unsafe_allow_html=True)
                 else:
-                    st.markdown("<h3 style='text-align: center; color: red;'>Generator Model Response</h3>", unsafe_allow_html=True) 
+                    st.markdown("<h3 style='text-align: center; color: red;'>Summary</h3>", unsafe_allow_html=True) 
                     response = get_text_generation(prompt=prompt, temperature = st.session_state['temperature'],
                                     max_output_tokens = st.session_state['token_limit'],
                                     top_p = st.session_state['top_p'],
