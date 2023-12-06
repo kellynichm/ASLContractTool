@@ -167,7 +167,7 @@ with st.container():
     uploaded_file = st.file_uploader("Choose a file", type='pdf')
     if uploaded_file:
         #st.balloons()
-        with st.spinner('Custom PaLM model is working to generate, wait.....'):
+        with st.spinner('The model is working on your summary...'):
             with fitz.open(stream=uploaded_file.read(), filetype="pdf") as doc:
                 text = ""
                 for page in doc:
@@ -183,7 +183,7 @@ with st.container():
                 
                 prompt = prompt_template.format(text=text)
                 #exception handling for length
-                if len(prompt) >= 28000:
+                if len(prompt) >= 27000:
                     st.markdown("<h6 style='text-align: center; color: red;'>Document exceeds input token limit. Try trimming the document.</h3>", unsafe_allow_html=True)
                 else:
                     st.markdown("<h3 style='text-align: center; color: red;'>Generator Model Response</h3>", unsafe_allow_html=True) 
