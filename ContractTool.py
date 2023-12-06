@@ -88,7 +88,7 @@ create_session_state()
 
 image = Image.open('./image/FairBanner.png')
 st.image(image)
-st.title(":red[ASL Team 2] PaLM 2 Contract Summarizer Demo")
+st.title(":red[ASL Team 2] PaLM 2 (Custom-Tuned) Contract Summarizer Demo")
 
 with st.sidebar:
     image = Image.open('./image/FairTab.png')
