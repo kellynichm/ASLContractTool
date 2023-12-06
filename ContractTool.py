@@ -184,7 +184,7 @@ with st.container():
             
             prompt = prompt_template.format(text=text)
             #exception handling for length
-            if len(prompt) >= 300000:
+            if len(prompt) >= 25000:
                 st.markdown("<h3 style='text-align: center; color: red;'>Document exceeds maximum token length. Try trimming the document. </h3>")
             else: 
                 response = get_text_generation(prompt=prompt, temperature = st.session_state['temperature'],
