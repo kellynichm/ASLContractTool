@@ -84,12 +84,12 @@ st.set_page_config(
 #creating session states
 create_session_state()
 
-image = Image.open('./image/palm.jpg')
+image = Image.open('./image/FairBanner.png')
 st.image(image)
 st.title(":red[ASL Team 2] PaLM 2 Contract Summarizer Demo")
 
 with st.sidebar:
-    image = Image.open('./image/sidebar_image.jpg')
+    image = Image.open('./image/FairTab.png')
     st.image(image)
     st.markdown("<h2 style='text-align: center; color: red;'>Setting Tab</h2>", unsafe_allow_html=True)
 
