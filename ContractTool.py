@@ -183,7 +183,7 @@ with st.container():
                 
                 prompt = prompt_template.format(text=text)
                 #exception handling for length
-                if len(prompt) >= 26000:
+                if len(prompt) >= 25000:
                     st.markdown("<h6 style='text-align: center; color: red;'>Document exceeds input token limit. Try trimming the document.</h3>", unsafe_allow_html=True)
                 else:
                     st.markdown("<h3 style='text-align: center; color: red;'>Generator Model Response</h3>", unsafe_allow_html=True) 
