@@ -166,7 +166,7 @@ with st.container():
                 ," \t \t Debug Model: ",st.session_state['debug_mode'])
 
 
-    uploaded_file = st.file_uploader("Please upload a contract for summarization. Contracts should be in .pdf format and must be less than 25,000 characters. If your contract is longer, please submit it as pieces.", type='pdf')
+    uploaded_file = st.file_uploader("Please upload a contract for summarization. Contracts should be in .pdf format and must be less than 25,000 characters. If your contract is longer, please submit it as parts.", type='pdf')
     if uploaded_file:
         #st.balloons()
         with st.spinner('The model is working on your summary...'):
