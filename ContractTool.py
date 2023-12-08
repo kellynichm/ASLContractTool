@@ -11,19 +11,19 @@ import streamlit as st
 from PIL import Image
 import pdfminer
 import pdfminer.high_level
-#from src.utils import * - rmoved as everythign is now in the single file 
-#from src.vertex import * - removed as everything is now in the single file
+#from src.utils import * - removed as everythign is now in the single file - This line can be removed. We should also be able to remove the src/utils file.
+#from src.vertex import * - removed as everything is now in the single file - This line can be removed. We should also be able to remove the src/vertex file. 
 
-#imports from the utils.py
+#imports from the utils.py - see above
 import streamlit as st
 
-#imports from the vertex src
+#imports from the vertex src - see above
 from vertexai.preview.language_models import TextGenerationModel
 import vertexai
 import streamlit as st
 import os
 
-#running utils.py directly here
+#running utils.py directly here - See above commment
 
 def reset_session() -> None:
     st.session_state['temperature'] = 0.0
@@ -53,11 +53,12 @@ def create_session_state():
     if 'response' not in st.session_state:
         st.session_state['response'] = []
 
-#running vertex directly here
-PROJECT_ID = os.environ.get('GCP_PROJECT') #Your Google Cloud Project ID
-LOCATION = os.environ.get('GCP_REGION')   #Your Google Cloud Project Region
+#running vertex directly here - See above comment
+PROJECT_ID = os.environ.get('GCP_PROJECT') #Your Google Cloud Project ID - You will need to set up your GCP project and Region in advance
+LOCATION = os.environ.get('GCP_REGION')   #Your Google Cloud Project Region - You will need to set up your GCP project and Region in advance
 vertexai.init(project=PROJECT_ID, location=LOCATION)
 
+#Grabbing the Model - Comment out "Get tuned model" to switch back to base bison model. Bison two is available as option below. There is also an option for the bison2 trained model. It (along with the other tuned model) will expire DEC 21.
 @st.cache_resource
 def get_model():
     generation_model = TextGenerationModel.from_pretrained("text-bison@001")
@@ -117,21 +118,12 @@ with st.sidebar:
     if st.button("Reset Session"):
         reset_session()
 
-#defining extract text
-
+# old extract text function - Can remove. This is now handled within the code, after the st.spinner() line
 #def extract_text_from_pdf(uploaded_file):
-#   doc = fitz.open(uploaded_file)
 #    text = ""
-#    for page_num in range(doc.page_count):
-#        page = doc[page_num]
-#        text += page.get_text()
+#    for page in pdfminer.high_level.extract_pages(uploaded_file):
+#            text += pdfminer.high_level.extract_text(page)
 #    return text
-
-def extract_text_from_pdf(uploaded_file):
-    text = ""
-    for page in pdfminer.high_level.extract_pages(uploaded_file):
-            text += pdfminer.high_level.extract_text(page)
-    return text
 
 #defining prompt template
 prompt_template = """
@@ -168,45 +160,36 @@ with st.container():
 
 
     uploaded_file = st.file_uploader("Please upload a contract for summarization. Contracts should be in .pdf format and must be less than 25,000 characters. If your contract is longer, please submit it as parts.", type='pdf')
+    #Pass in PDF with upload function
     if uploaded_file:
-        #st.balloons()
         with st.spinner('The model is working on your summary...'):
             with fitz.open(stream=uploaded_file.read(), filetype="pdf") as doc:
                 text = ""
                 for page in doc:
-                    text += page.get_text()
-                #st.write(text) 
-        #doc = fitz.open("pdf",uploaded_file)
-        #text =""
-        #for page_num in range (doc.page_count):
-        #    page = doc[page_num]
-        #    text += page.get_text()
-        #text = extract_text_from_pdf(uploaded_file)
-
-                
+                    text += page.get_text()             
                 prompt = prompt_template.format(text=text)
-                #exception handling for length
+                #Exception handling for length - 
+                #Notes from Nick Kelly on exception handling: 
+                    #   Change to larger character count if using bison 32 model. 
+                    # Also consider a chunking option for future dev.
+                    #Try chunking by:
+                        #Break text into 25k chunks
+                        #Summarize chunk - use general LLM "summarize this" approach
+                        #Append summaries of chunks into a new output string
+                        #Check new collection of summaries is under 25k
+                            #If not, chunk + summarize that
+                            #If less than 25k 
+                            #Feed into original method below
                 if len(prompt) >= 25000:
                     st.markdown("<h6 style='text-align: center; color: red;'>Document exceeds input token limit. Try trimming the document.</h3>", unsafe_allow_html=True)
+                #Length exception handling ends
                 else:
-                    st.markdown("<h3 style='text-align: center; color: red;'>Summary</h3>", unsafe_allow_html=True) 
+                    st.markdown("<h3 style='text-align: center; color: red;'>Summary</h3>", unsafe_allow_html=True)
+                #getting response from model, pulling prompt from above and session settings defined above    
                     response = get_text_generation(prompt=prompt, temperature = st.session_state['temperature'],
                                     max_output_tokens = st.session_state['token_limit'],
                                     top_p = st.session_state['top_p'],
                                     top_k = st.session_state['top_k'])
                     st.session_state['response'].append(response)
+                #writing response out as markdown
                     st.markdown(response)
-            
-
-
-    #prompt = st.text_area("Add your prompt: ",height = 100)
-    #if prompt:
-    #    st.session_state['prompt'].append(prompt)
-    #    st.markdown("<h3 style='text-align: center; color: blue;'>Generator Model Response</h3>", unsafe_allow_html=True)
-    #    with st.spinner('PaLM is working to generate, wait.....'):
-    #        response = get_text_generation(prompt=prompt, temperature = st.session_state['temperature'],
-    #                            max_output_tokens = st.session_state['token_limit'],
-    #                            top_p = st.session_state['top_p'],
-    #                            top_k = st.session_state['top_k'])
-    #        st.session_state['response'].append(response)
-    #        st.markdown(response)
