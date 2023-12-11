@@ -61,10 +61,9 @@ vertexai.init(project=PROJECT_ID, location=LOCATION)
 #Grabbing the Model - Comment out "Get tuned model" to switch back to base bison model. Bison two is available as option below. There is also an option for the bison2 trained model. It (along with the other tuned model) will expire DEC 21.
 @st.cache_resource
 def get_model():
-    generation_model = TextGenerationModel.from_pretrained("text-bison@001")
-    generation_model = generation_model.get_tuned_model("projects/215149473000/locations/us-central1/models/9086379485103652864")
-    #generation_model = TextGenerationModel.from_pretrained("text-bison@002")
-    #generation_model = generation_model.get_tuned_model("projects/215149473000/locations/us-central1/models/4907601980857253888")
+    #generation_model = TextGenerationModel.from_pretrained("text-bison@001")
+    generation_model = TextGenerationModel.from_pretrained("text-bison@002")
+    #generation_model = generation_model.get_tuned_model("projects/215149473000/locations/us-central1/models/9086379485103652864")
     return generation_model
 
 def get_text_generation(prompt="",  **parameters):
